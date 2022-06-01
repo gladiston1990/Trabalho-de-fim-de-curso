@@ -1,0 +1,37 @@
+import RPi.GPIO as GPIO
+
+import RPi.GPIO as GPIO
+import time
+
+pir_sensor = 11
+alert = 7
+
+#definir como vai trabalhar com a placa 
+# Numeros de Pinos (BOARD) ou Número de GPIO (BCM). No caso Usamos BOARD
+
+GPIO.setmode(GPIO.BOARD)
+
+#set alert como saída
+GPIO.setup(alert,GPIO.OUT)
+
+#set pir_sensor como entrada
+GPIO.setup(pir_sensor, GPIO.IN)
+
+#variável para armazenar valor de Entrada do GPIO
+current_state = 0
+
+# try e expect como boa prática para erros eventuais e preservação da placa
+try:
+    while True: # Leitura de 0.1 segundo do valor do pino sempre que o laço for verdadeiro, current_state = 0
+        time.sleep(0.1)
+        current_state = GPIO.input(pir_sensor)
+        if current_state == 1: #saida do loop while, GPIO.input = 1
+            print("Pino GPIO %s is %s" % (pir_sensor, current_state))
+            GPIO.output(alert,True)
+            time.sleep(1)
+            GPIO.output(alert,False)
+            time.sleep(5)
+except KeyboardInterrupt:
+    pass
+finally:
+    GPIO.cleanup()
